@@ -1,0 +1,17 @@
+{
+  "name": "fso-part3-course",
+  "version": "1.0.0",
+  "description": "backend with expressjs beginner level",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start":"node --watch index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Andrew Dzokwom",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
