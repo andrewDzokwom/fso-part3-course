@@ -61,11 +61,17 @@ app.post("/api/notes", (req, res)=>{
     })
   }
 
-  const note = {
+  const note = new Note({
     content: body.content,
-    important: Boolean(body.important) || false,
-    id: getId()
-  }
+    important: Boolean(body.important) || false
+  })
+  
+  
+  // {
+  //   content: body.content,
+  //   important: Boolean(body.important) || false,
+  //   id: getId()
+  // }
 
   notes = notes.concat(note)
   res.json(note)
