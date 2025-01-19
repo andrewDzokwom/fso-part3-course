@@ -1,3 +1,4 @@
+import Note from './models/note.js'
 import express from "express"
 import cors from "cors"
 
@@ -10,23 +11,6 @@ app.use(cors())
 app.use(express.json())
 
 
-let notes = [
-    {
-      id: "1",
-      content: "HTML is easy",
-      important: true
-    },
-    {
-      id: "2",
-      content: "Browser can execute only JavaScript",
-      important: false
-    },
-    {
-      id: "3",
-      content: "GET and POST are the most important methods of HTTP protocol",
-      important: true
-    }
-  ]
 
 
 app.get("/", (req, res)=>{
@@ -49,7 +33,9 @@ app.get("/api/notes/:id", (req, res)=>{
 })
 
 app.get("/api/notes", (req, res)=>{
+  Note.find({}).then(notes => {
     res.json(notes)
+  })
 })
 
 //delete handling
