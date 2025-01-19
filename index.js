@@ -78,7 +78,7 @@ app.post("/api/notes", (req, res)=>{
   notes = notes.concat(note)
   res.json(note)
 })
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 3001
 app.listen(PORT, ()=>{
     console.log(`Seerver running on address http://localhost:${PORT}`);
     
