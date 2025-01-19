@@ -1,3 +1,5 @@
+import dotenv from "dotenv"
+dotenv.config()
 import Note from './models/note.js'
 import express from "express"
 import cors from "cors"
@@ -76,8 +78,8 @@ app.post("/api/notes", (req, res)=>{
   notes = notes.concat(note)
   res.json(note)
 })
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, ()=>{
-    console.log(`Seerver running on address http://localhost:3001`);
+    console.log(`Seerver running on address http://localhost:${PORT}`);
     
 })
