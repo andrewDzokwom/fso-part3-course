@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config();
 import Note from './models/note.js'
 import express from "express"
 import cors from "cors"
@@ -19,40 +21,48 @@ app.get("/", (req, res)=>{
     res.send(`<h1>This is the homepage</h1>`)
 })
 
-app.get("/api/notes/:id", (req, res)=>{
-    const id = req.params.id
-    const note = notes.find(note=> note.id === id)
-    if (note){
-        res.json(note)
-        return
-    }
-    res.status(400).end(JSON.stringify({
-        error: "Note not found"
-    }))
-    
+app.get("/api/notes", (req, res)=>{
+    Note.find({}).then(notes => {
+        res.json(notes)
+    })
 })
 
-app.get("/api/notes", (req, res)=>{
-  Note.find({}).then(notes => {
-    res.json(notes)
-  })
+app.get("/api/notes/:id", (req, res) => {
+    Note.findById(req.params.id)
+        .then(note => {
+            if (note) {
+                res.json(note)
+            } else {
+                res.status(404).json({
+                    error: "Note not found"
+                })
+            }
+        })
+        .catch(error => {
+            console.log(error)
+            res.status(400).json({
+                error: "Invalid id format"
+            })
+        })
 })
+
+
 
 //delete handling
 
-app.delete("/api/notes/:id", (req, res)=>{
-  const UserId = req.params.id;
-  notes = notes.filter(note => note.id !== UserId);
-  res.status(204).end()
+app.delete("/api/notes/:id", (req, res, next)=>{
+  Note.findByIdAndDelete(req.params.id)
+  .then(() => {
+    res.status(204).json({
+      result: "Message deleted."
+    })
+  })
+  .catch(error => next(error))
 })
 
-// id generation
-const getId = ()=>{
-  const maxId = notes.length > 0? Math.max(...notes.map(note => Number(note.id))): 0;
-  return maxId + 1
-}
-// post handlind 
-app.post("/api/notes", (req, res)=>{
+
+// post(adding note) handler
+app.post("/api/notes", (req, res, next)=>{
   console.log(req.body)
   const body = req.body
   if (!body.content){
@@ -66,20 +76,25 @@ app.post("/api/notes", (req, res)=>{
     important: Boolean(body.important) || false
   })
   
-  // {
-  //   content: body.content,
-  //   important: Boolean(body.important) || false,
-  //   id: getId()
-  // }
   note.save().then(savedNote => {
-    res.json(savedNoite)
+    res.json(savedNote)
   })
-  
-  notes = notes.concat(note)
-  res.json(note)
+  .catch(error => next(error))
+  // notes = notes.concat(note)
+  // res.json(note)
 })
-const PORT = process.env.PORT || 3001
+
+// unknown endpoint function 
+function unknownEndpoint(req, res){
+  res.status(404).send({
+    error: "unknown endpoint"
+  })
+}
+
+app.use(unknownEndpoint)
+
+const PORT = process.env.PORT || 3003
 app.listen(PORT, ()=>{
-    console.log(`Seerver running on address http://localhost:${PORT}`);
+    console.log(`Server running on address http://localhost:${PORT}`);
     
 })
