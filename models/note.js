@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 dotenv.config()
-import mongoose from "mongoose"
+import mongoose from 'mongoose'
 
 
 mongoose.set('strictQuery', false)
@@ -9,10 +9,10 @@ mongoose.set('strictQuery', false)
 const url = process.env.MONGODB_URI
 
 
-console.log('connecting to', url)
+console.log('connecting to db ...')
 
 mongoose.connect(url)
-  .then(result => {
+  .then(() => {
     console.log('connected to MongoDB')
   })
   .catch(error => {
@@ -20,11 +20,7 @@ mongoose.connect(url)
   })
 
 const noteSchema = new mongoose.Schema({
-  content: {
-    type: String,
-    minLength: 8,
-    required: true
-  },
+  content: String,
   important: Boolean,
 })
 
@@ -36,6 +32,6 @@ noteSchema.set('toJSON', {
   }
 })
 
- export  default mongoose.model('Note', noteSchema)
+export  default mongoose.model('Note', noteSchema)
 
 // export default Note
